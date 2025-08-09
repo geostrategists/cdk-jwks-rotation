@@ -1,0 +1,97 @@
+{
+  "name": "@geostrategists/cdk-jwks-rotation",
+  "version": "0.0.1",
+  "description": "CDK construct for generating and rotating JWT signing keys and JSON Web Key Sets (JWKS)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/geostrategists/cdk-jwks-rotation.git"
+  },
+  "bugs": {
+    "url": "https://github.com/geostrategists/cdk-jwks-rotation/issues"
+  },
+  "homepage": "https://github.com/geostrategists/cdk-jwks-rotation#readme",
+  "author": "Bernhard Frauendienst <bernhard.frauendienst@geostrategists.de>",
+  "type": "commonjs",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "lint": "biome lint ./src",
+    "format": "biome format --write ./src",
+    "format:check": "biome format ./src",
+    "typecheck": "tsc",
+    "build": "tsc && tsup",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:ui": "vitest --ui",
+    "prepack": "yarn build && yarn npmignore --auto",
+    "prepare": "husky",
+    "release": "semantic-release"
+  },
+  "peerDependencies": {
+    "aws-cdk-lib": "^2.0.0",
+    "constructs": "^10.0.0"
+  },
+  "devDependencies": {
+    "@aws-sdk/client-s3": "^3.863.0",
+    "@aws-sdk/client-secrets-manager": "^3.863.0",
+    "@biomejs/biome": "^2.1.4",
+    "@semantic-release/exec": "^7.1.0",
+    "@types/aws-lambda": "^8.10.152",
+    "@types/node": "^22.17.0",
+    "@vitest/ui": "^3.2.4",
+    "aws-cdk-lib": "^2.210.0",
+    "aws-sdk-client-mock": "^4.1.0",
+    "constructs": "^10.4.2",
+    "husky": "^9.1.7",
+    "jose": "^6.0.12",
+    "lint-staged": "^16.1.5",
+    "nanoid": "^5.1.5",
+    "npmignore": "^0.3.1",
+    "semantic-release": "^24.2.7",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
+  },
+  "packageManager": "yarn@4.9.2+sha512.1fc009bc09d13cfd0e19efa44cbfc2b9cf6ca61482725eb35bbc5e257e093ebf4130db6dfe15d604ff4b79efd8e1e8e99b25fa7d0a6197c9f9826358d4d65c3c",
+  "release": {
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      [
+        "@semantic-release/exec",
+        {
+          "verifyConditionsCmd": "echo //npm.pkg.github.com/:_authToken=${process.env.GITHUB_TOKEN} > /tmp/github.npmrc && npm whoami --userconfig /tmp/github.npmrc --registry https://npm.pkg.github.com/",
+          "publishCmd": "npm publish --userconfig /tmp/github.npmrc --tag ${nextRelease.channel || 'latest'} --registry https://npm.pkg.github.com/ --no-git-tag-version",
+          "successCmd": "rm /tmp/github.npmrc",
+          "failCmd": "rm /tmp/github.npmrc"
+        }
+      ],
+      "@semantic-release/npm",
+      "@semantic-release/github"
+    ]
+  },
+  "publishConfig": {
+    "ignore": [
+      "!dist/**",
+      "src/",
+      ".*",
+      "tsconfig.json",
+      "tsup.config.ts"
+    ],
+    "access": "public",
+    "provenance": true
+  },
+  "lint-staged": {
+    "*": "biome lint --write"
+  }
+}
