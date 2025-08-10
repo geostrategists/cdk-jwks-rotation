@@ -57,12 +57,12 @@ describe("Cleanup Expired Keys", () => {
       })
       .resolves({
         SecretString: JSON.stringify({
-          privateKey: "current-private-key",
+          privateKeyPem: "current-private-key",
           kid: "current-kid",
           alg: "RS256",
           createdAt: new Date().toISOString(),
           activatedAt: expiredTime,
-          publicJwk: { kty: "RSA" },
+          publicKeyJwk: { kty: "RSA" },
         }),
         VersionId: "current-version-id",
         VersionStages: ["AWSCURRENT"],
@@ -75,11 +75,11 @@ describe("Cleanup Expired Keys", () => {
       })
       .resolves({
         SecretString: JSON.stringify({
-          privateKey: "next-private-key",
+          privateKeyPem: "next-private-key",
           kid: "next-kid",
           alg: "RS256",
           createdAt: new Date().toISOString(),
-          publicJwk: { kty: "RSA" },
+          publicKeyJwk: { kty: "RSA" },
         }),
         VersionId: "next-version-id",
         VersionStages: ["NEXT"],
@@ -92,12 +92,12 @@ describe("Cleanup Expired Keys", () => {
       })
       .resolves({
         SecretString: JSON.stringify({
-          privateKey: "previous-private-key",
+          privateKeyPem: "previous-private-key",
           kid: "previous-kid",
           alg: "RS256",
           createdAt: expiredTime,
           activatedAt: expiredTime,
-          publicJwk: { kty: "RSA" },
+          publicKeyJwk: { kty: "RSA" },
         }),
         VersionId: "previous-version-id",
         VersionStages: ["AWSPREVIOUS"],
@@ -142,12 +142,12 @@ describe("Cleanup Expired Keys", () => {
       })
       .resolves({
         SecretString: JSON.stringify({
-          privateKey: "current-private-key",
+          privateKeyPem: "current-private-key",
           kid: "current-kid",
           alg: "RS256",
           createdAt: new Date().toISOString(),
           activatedAt: recentTime,
-          publicJwk: { kty: "RSA" },
+          publicKeyJwk: { kty: "RSA" },
         }),
         VersionId: "current-version-id",
         VersionStages: ["AWSCURRENT"],
@@ -167,12 +167,12 @@ describe("Cleanup Expired Keys", () => {
       })
       .resolves({
         SecretString: JSON.stringify({
-          privateKey: "previous-private-key",
+          privateKeyPem: "previous-private-key",
           kid: "previous-kid",
           alg: "RS256",
           createdAt: recentTime,
           activatedAt: recentTime,
-          publicJwk: { kty: "RSA" },
+          publicKeyJwk: { kty: "RSA" },
         }),
         VersionId: "previous-version-id",
         VersionStages: ["AWSPREVIOUS"],
@@ -232,11 +232,11 @@ describe("Cleanup Expired Keys", () => {
       })
       .resolves({
         SecretString: JSON.stringify({
-          privateKey: "current-private-key",
+          privateKeyPem: "current-private-key",
           kid: "current-kid",
           alg: "RS256",
           createdAt: new Date().toISOString(),
-          publicJwk: { kty: "RSA" },
+          publicKeyJwk: { kty: "RSA" },
         }),
         VersionId: "current-version-id",
         VersionStages: ["AWSCURRENT"],
@@ -265,11 +265,11 @@ describe("Cleanup Expired Keys", () => {
       })
       .resolves({
         SecretString: JSON.stringify({
-          privateKey: "current-private-key",
+          privateKeyPem: "current-private-key",
           kid: "current-kid",
           alg: "RS256",
           createdAt: new Date().toISOString(),
-          publicJwk: { kty: "RSA" },
+          publicKeyJwk: { kty: "RSA" },
         }),
         VersionId: "current-version-id",
         VersionStages: ["AWSCURRENT"],

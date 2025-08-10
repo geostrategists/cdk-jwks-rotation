@@ -76,11 +76,11 @@ describe("Create Secret", () => {
       })
       .resolves({
         SecretString: JSON.stringify({
-          privateKey: "existing-private-key",
+          privateKeyPem: "existing-private-key",
           kid: "existing-kid",
           alg: "RS256",
           createdAt: oldDate,
-          publicJwk: { kty: "RSA" },
+          publicKeyJwk: { kty: "RSA" },
         }),
         VersionId: "existing-version-id",
         VersionStages: ["NEXT"],
@@ -112,11 +112,11 @@ describe("Create Secret", () => {
       })
       .resolves({
         SecretString: JSON.stringify({
-          privateKey: "recent-private-key",
+          privateKeyPem: "recent-private-key",
           kid: "recent-kid",
           alg: "RS256",
           createdAt: recentDate,
-          publicJwk: { kty: "RSA" },
+          publicKeyJwk: { kty: "RSA" },
         }),
         VersionId: "recent-version-id",
         VersionStages: ["NEXT"],
@@ -188,12 +188,12 @@ describe("Create Secret", () => {
       })
       .resolves({
         SecretString: JSON.stringify({
-          privateKey: "current-private-key",
+          privateKeyPem: "current-private-key",
           kid: "current-kid",
           alg: "RS256",
           createdAt: new Date().toISOString(),
           activatedAt: new Date().toISOString(),
-          publicJwk: { kty: "RSA" },
+          publicKeyJwk: { kty: "RSA" },
         }),
         VersionId: "current-version-id",
         VersionStages: ["AWSCURRENT"],
@@ -270,11 +270,11 @@ describe("Create Secret", () => {
       })
       .resolves({
         SecretString: JSON.stringify({
-          privateKey: "initial-private-key",
+          privateKeyPem: "initial-private-key",
           kid: "initial-kid",
           alg: "RS256",
           createdAt: new Date().toISOString(),
-          publicJwk: { kty: "RSA" },
+          publicKeyJwk: { kty: "RSA" },
         }),
         VersionId: "initial-version-id",
         VersionStages: ["AWSCURRENT"],

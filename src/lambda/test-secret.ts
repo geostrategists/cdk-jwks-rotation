@@ -20,7 +20,7 @@ export async function testSecret(
     throw new Error("AWSPENDING version not found");
   }
 
-  const { privateKey, alg, kid } = pendingSecret.secretValue;
+  const { privateKeyPem, alg, kid } = pendingSecret.secretValue;
 
   const testPayload = {
     sub: "test-subject",
@@ -30,7 +30,7 @@ export async function testSecret(
   };
 
   console.log(`Signing test JWT with private key ${kid}`);
-  const privateKeyObject = await importPKCS8(privateKey, alg);
+  const privateKeyObject = await importPKCS8(privateKeyPem, alg);
 
   const jwt = await new SignJWT(testPayload)
     .setProtectedHeader({

@@ -50,11 +50,11 @@ describe("Finish Secret", () => {
       })
       .resolves({
         SecretString: JSON.stringify({
-          privateKey: "current-private-key",
+          privateKeyPem: "current-private-key",
           kid: "current-kid",
           alg: "RS256",
           createdAt: new Date().toISOString(),
-          publicJwk: { kty: "RSA" },
+          publicKeyJwk: { kty: "RSA" },
         }),
         VersionId: "current-version-id",
         VersionStages: ["AWSCURRENT"],
@@ -68,11 +68,11 @@ describe("Finish Secret", () => {
       })
       .resolves({
         SecretString: JSON.stringify({
-          privateKey: "pending-private-key",
+          privateKeyPem: "pending-private-key",
           kid: "pending-kid",
           alg: "RS256",
           createdAt: new Date().toISOString(),
-          publicJwk: { kty: "RSA" },
+          publicKeyJwk: { kty: "RSA" },
         }),
         VersionId: "test-token",
         VersionStages: ["AWSPENDING"],
@@ -108,11 +108,11 @@ describe("Finish Secret", () => {
 
   it("should add deactivation timestamp to previous version", async () => {
     const currentSecretValue = {
-      privateKey: "current-private-key",
+      privateKeyPem: "current-private-key",
       kid: "current-kid",
       alg: "RS256",
       createdAt: new Date().toISOString(),
-      publicJwk: { kty: "RSA" },
+      publicKeyJwk: { kty: "RSA" },
     };
 
     secretsManagerMock
@@ -134,11 +134,11 @@ describe("Finish Secret", () => {
       })
       .resolves({
         SecretString: JSON.stringify({
-          privateKey: "pending-private-key",
+          privateKeyPem: "pending-private-key",
           kid: "pending-kid",
           alg: "RS256",
           createdAt: new Date().toISOString(),
-          publicJwk: { kty: "RSA" },
+          publicKeyJwk: { kty: "RSA" },
         }),
         VersionId: "test-token",
         VersionStages: ["AWSPENDING"],
@@ -174,11 +174,11 @@ describe("Finish Secret", () => {
       .on(GetSecretValueCommand)
       .resolves({
         SecretString: JSON.stringify({
-          privateKey: "current-private-key",
+          privateKeyPem: "current-private-key",
           kid: "current-kid",
           alg: "RS256",
           createdAt: new Date().toISOString(),
-          publicJwk: { kty: "RSA" },
+          publicKeyJwk: { kty: "RSA" },
         }),
         VersionId: "current-version-id",
         VersionStages: ["AWSCURRENT"],

@@ -107,11 +107,11 @@ describe("Utils", () => {
   describe("getSecretValue", () => {
     it("should return secret value when found", async () => {
       const mockSecretValue = {
-        privateKey: "test-private-key",
+        privateKeyPem: "test-private-key",
         kid: "test-kid",
         alg: "RS256",
         createdAt: new Date().toISOString(),
-        publicJwk: { kty: "RSA" },
+        publicKeyJwk: { kty: "RSA" },
       };
 
       secretsManagerMock.on(GetSecretValueCommand).resolves({
@@ -168,11 +168,11 @@ describe("Utils", () => {
   describe("putSecretValue", () => {
     it("should put secret value successfully", async () => {
       const mockSecretValue = {
-        privateKey: "test-private-key",
+        privateKeyPem: "test-private-key",
         kid: "test-kid",
         alg: "RS256",
         createdAt: new Date().toISOString(),
-        publicJwk: { kty: "RSA" },
+        publicKeyJwk: { kty: "RSA" },
       };
 
       secretsManagerMock.on(PutSecretValueCommand).resolves({});
