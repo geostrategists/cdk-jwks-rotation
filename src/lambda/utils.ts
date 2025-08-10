@@ -201,7 +201,10 @@ export async function updateJwksFile(
   return jwksDocument;
 }
 
-type JwkSource = Pick<SecretValue, "publicJwk" | "alg" | "kid" | "activatedAt">;
+type JwkSource = Pick<
+  SecretValue,
+  "publicKeyJwk" | "alg" | "kid" | "activatedAt"
+>;
 
 export interface BuildJwksOptions {
   nextSecret?: JwkSource;
@@ -232,8 +235,8 @@ export async function buildJwks(
     )?.secretValue;
 
   const addJwk = (jwk: JwkSource) => {
-    const { publicJwk, alg, kid } = jwk;
-    keys.push({ ...publicJwk, kid, alg, use: "sig" });
+    const { publicKeyJwk, alg, kid } = jwk;
+    keys.push({ ...publicKeyJwk, kid, alg, use: "sig" });
   };
 
   const next = await getJwk(options?.nextSecret, "NEXT");

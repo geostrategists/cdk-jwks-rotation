@@ -24,6 +24,29 @@ npm install @geostrategists/cdk-jwks-rotation
 yarn add @geostrategists/cdk-jwks-rotation
 ```
 
+## Types
+
+### SecretValue
+
+The `SecretValue` interface represents the structure of cryptographic key data stored in AWS Secrets Manager:
+
+```ts
+interface SecretValue {
+  /** The private key in PEM format used for signing JWTs */
+  privateKeyPem: string;
+  /** The public key in JWK format for inclusion in JWKS */
+  publicKeyJwk: JWK;
+  /** Unique key identifier used in JWT headers and JWKS */
+  kid: string;
+  /** Algorithm used for signing (e.g., RS256, ES256) */
+  alg: string;
+  /** ISO timestamp when the key was created */
+  createdAt: string;
+  /** ISO timestamp when the key was activated for signing (optional) */
+  activatedAt?: string;
+}
+```
+
 ## Usage
 
 ### Mandatory Props

@@ -5,7 +5,6 @@ import {
   exportPKCS8,
   type GenerateKeyPairResult,
   generateKeyPair,
-  type JWK,
 } from "jose";
 import { nanoid } from "nanoid";
 import type { KeySpec } from "../jwks-rotation";
@@ -120,7 +119,6 @@ export async function createSecret(
 
 async function generateJwksKeyPair(keySpec: KeySpec): Promise<{
   secretValue: SecretValue;
-  publicJWK: JWK;
 }> {
   const { algorithm, crv, modulusLength } = keySpec;
 
@@ -144,11 +142,11 @@ async function generateJwksKeyPair(keySpec: KeySpec): Promise<{
   const alg = algorithm;
 
   const privateKeyPem = await exportPKCS8(keyPair.privateKey);
-  const publicJWK = await exportJWK(keyPair.publicKey);
+  const publicKeyJwk = await exportJWK(keyPair.publicKey);
 
   const secretValue: SecretValue = {
-    privateKey: privateKeyPem,
-    publicJwk: publicJWK,
+    privateKeyPem,
+    publicKeyJwk,
     kid,
     alg,
     createdAt: new Date().toISOString(),
@@ -156,6 +154,5 @@ async function generateJwksKeyPair(keySpec: KeySpec): Promise<{
 
   return {
     secretValue,
-    publicJWK,
   };
 }

@@ -79,7 +79,7 @@ zTxPPg/R3Ih9XuBRmrGGqhAH
       })
       .resolves({
         SecretString: JSON.stringify({
-          privateKey: mockPrivateKey,
+          privateKeyPem: mockPrivateKey,
           kid: "test-kid",
           alg: "RS256",
           createdAt: new Date().toISOString(),
@@ -122,7 +122,7 @@ zTxPPg/R3Ih9XuBRmrGGqhAH
       .on(GetSecretValueCommand)
       .resolves({
         SecretString: JSON.stringify({
-          privateKey: mockPrivateKey,
+          privateKeyPem: mockPrivateKey,
           kid: "test-kid",
           alg: "RS256",
           createdAt: new Date().toISOString(),
@@ -143,7 +143,7 @@ zTxPPg/R3Ih9XuBRmrGGqhAH
       .on(GetSecretValueCommand)
       .resolves({
         SecretString: JSON.stringify({
-          privateKey: mockPrivateKey,
+          privateKeyPem: mockPrivateKey,
           kid: "test-kid",
           alg: "RS256",
           createdAt: new Date().toISOString(),
@@ -182,7 +182,7 @@ zTxPPg/R3Ih9XuBRmrGGqhAH
       .on(GetSecretValueCommand)
       .resolves({
         SecretString: JSON.stringify({
-          privateKey: mockPrivateKey,
+          privateKeyPem: mockPrivateKey,
           kid: "test-kid",
           alg: "RS256",
           createdAt: new Date().toISOString(),
