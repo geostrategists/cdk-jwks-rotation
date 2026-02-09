@@ -1,8 +1,4 @@
-import {
-  GetObjectCommand,
-  PutObjectCommand,
-  type S3Client,
-} from "@aws-sdk/client-s3";
+import { GetObjectCommand, PutObjectCommand, type S3Client } from "@aws-sdk/client-s3";
 import {
   GetSecretValueCommand,
   type GetSecretValueCommandInput,
@@ -26,12 +22,9 @@ export interface EnvironmentConfig {
 export function getEnvironmentConfig(): EnvironmentConfig {
   const bucketName = process.env.BUCKET_NAME;
   const bucketPath = process.env.BUCKET_PATH;
-  const minActivationGracePeriodSecondsString =
-    process.env.MIN_ACTIVATION_GRACE_PERIOD_SECONDS;
-  const maxTokenValidityDurationSecondsString =
-    process.env.MAX_TOKEN_VALIDITY_DURATION_SECONDS;
-  const minKeyCleanupGracePeriodSecondsString =
-    process.env.MIN_KEY_CLEANUP_GRACE_PERIOD_SECONDS;
+  const minActivationGracePeriodSecondsString = process.env.MIN_ACTIVATION_GRACE_PERIOD_SECONDS;
+  const maxTokenValidityDurationSecondsString = process.env.MAX_TOKEN_VALIDITY_DURATION_SECONDS;
+  const minKeyCleanupGracePeriodSecondsString = process.env.MIN_KEY_CLEANUP_GRACE_PERIOD_SECONDS;
   const keySpecString = process.env.KEY_SPEC;
 
   if (!bucketName) {
@@ -43,56 +36,35 @@ export function getEnvironmentConfig(): EnvironmentConfig {
   }
 
   if (!minActivationGracePeriodSecondsString) {
-    throw new Error(
-      "MIN_ACTIVATION_GRACE_PERIOD_SECONDS environment variable is required",
-    );
+    throw new Error("MIN_ACTIVATION_GRACE_PERIOD_SECONDS environment variable is required");
   }
 
   if (!maxTokenValidityDurationSecondsString) {
-    throw new Error(
-      "MAX_TOKEN_VALIDITY_DURATION_SECONDS environment variable is required",
-    );
+    throw new Error("MAX_TOKEN_VALIDITY_DURATION_SECONDS environment variable is required");
   }
 
   if (!minKeyCleanupGracePeriodSecondsString) {
-    throw new Error(
-      "MIN_KEY_CLEANUP_GRACE_PERIOD_SECONDS environment variable is required",
-    );
+    throw new Error("MIN_KEY_CLEANUP_GRACE_PERIOD_SECONDS environment variable is required");
   }
 
   if (!keySpecString) {
     throw new Error("KEY_SPEC environment variable is required");
   }
 
-  const minActivationGracePeriodSeconds = parseInt(
-    minActivationGracePeriodSecondsString,
-    10,
-  );
-  const maxTokenValidityDurationSeconds = parseInt(
-    maxTokenValidityDurationSecondsString,
-    10,
-  );
-  const minKeyCleanupGracePeriodSeconds = parseInt(
-    minKeyCleanupGracePeriodSecondsString,
-    10,
-  );
+  const minActivationGracePeriodSeconds = parseInt(minActivationGracePeriodSecondsString, 10);
+  const maxTokenValidityDurationSeconds = parseInt(maxTokenValidityDurationSecondsString, 10);
+  const minKeyCleanupGracePeriodSeconds = parseInt(minKeyCleanupGracePeriodSecondsString, 10);
 
   if (Number.isNaN(minActivationGracePeriodSeconds)) {
-    throw new Error(
-      "MIN_ACTIVATION_GRACE_PERIOD_SECONDS must be a valid number",
-    );
+    throw new Error("MIN_ACTIVATION_GRACE_PERIOD_SECONDS must be a valid number");
   }
 
   if (Number.isNaN(maxTokenValidityDurationSeconds)) {
-    throw new Error(
-      "MAX_TOKEN_VALIDITY_DURATION_SECONDS must be a valid number",
-    );
+    throw new Error("MAX_TOKEN_VALIDITY_DURATION_SECONDS must be a valid number");
   }
 
   if (Number.isNaN(minKeyCleanupGracePeriodSeconds)) {
-    throw new Error(
-      "MIN_KEY_CLEANUP_GRACE_PERIOD_SECONDS must be a valid number",
-    );
+    throw new Error("MIN_KEY_CLEANUP_GRACE_PERIOD_SECONDS must be a valid number");
   }
 
   let keySpec: KeySpec;
@@ -201,10 +173,7 @@ export async function updateJwksFile(
   return jwksDocument;
 }
 
-type JwkSource = Pick<
-  SecretValue,
-  "publicKeyJwk" | "alg" | "kid" | "activatedAt"
->;
+type JwkSource = Pick<SecretValue, "publicKeyJwk" | "alg" | "kid" | "activatedAt">;
 
 export interface BuildJwksOptions {
   nextSecret?: JwkSource;
@@ -222,10 +191,7 @@ export async function buildJwks(
 
   const keys: JWK[] = [];
 
-  const getJwk = async (
-    override: JwkSource | undefined,
-    versionStage: string,
-  ) =>
+  const getJwk = async (override: JwkSource | undefined, versionStage: string) =>
     override ??
     (
       await getSecretValue(secretsClient, {

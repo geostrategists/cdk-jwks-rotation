@@ -1,16 +1,14 @@
+import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { GetSecretValueCommand, SecretsManagerClient } from "@aws-sdk/client-secrets-manager";
 import { mockClient } from "aws-sdk-client-mock";
-import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
-import {
-  SecretsManagerClient,
-  GetSecretValueCommand,
-} from "@aws-sdk/client-secrets-manager";
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { testSecret } from "../../src/lambda/test-secret";
 
 const s3Mock = mockClient(S3Client);
 const secretsManagerMock = mockClient(SecretsManagerClient);
 const mockedS3Client: S3Client = s3Mock as unknown as S3Client;
-const mockedSecretsManagerClient: SecretsManagerClient = secretsManagerMock as unknown as SecretsManagerClient;
+const mockedSecretsManagerClient: SecretsManagerClient =
+  secretsManagerMock as unknown as SecretsManagerClient;
 
 vi.mock("../../src/lambda/utils", async () => {
   const actual = await vi.importActual("../../src/lambda/utils");
@@ -94,13 +92,13 @@ zTxPPg/R3Ih9XuBRmrGGqhAH
           Promise.resolve(
             JSON.stringify({
               keys: [mockPublicJwk],
-            })
+            }),
           ),
       } as any,
     });
 
     await expect(
-      testSecret(mockedSecretsManagerClient, mockedS3Client, "test-secret", "test-token")
+      testSecret(mockedSecretsManagerClient, mockedS3Client, "test-secret", "test-token"),
     ).resolves.not.toThrow();
 
     expect(secretsManagerMock.commandCalls(GetSecretValueCommand)).toHaveLength(1);
@@ -108,49 +106,43 @@ zTxPPg/R3Ih9XuBRmrGGqhAH
   });
 
   it("should throw error when AWSPENDING secret not found", async () => {
-    secretsManagerMock
-      .on(GetSecretValueCommand)
-      .rejects({ name: "ResourceNotFoundException" });
+    secretsManagerMock.on(GetSecretValueCommand).rejects({ name: "ResourceNotFoundException" });
 
     await expect(
-      testSecret(mockedSecretsManagerClient, mockedS3Client, "test-secret", "test-token")
+      testSecret(mockedSecretsManagerClient, mockedS3Client, "test-secret", "test-token"),
     ).rejects.toThrow("AWSPENDING version not found");
   });
 
   it("should throw error when JWKS file not found", async () => {
-    secretsManagerMock
-      .on(GetSecretValueCommand)
-      .resolves({
-        SecretString: JSON.stringify({
-          privateKeyPem: mockPrivateKey,
-          kid: "test-kid",
-          alg: "RS256",
-          createdAt: new Date().toISOString(),
-        }),
-        VersionId: "test-version-id",
-        VersionStages: ["AWSPENDING"],
-      });
+    secretsManagerMock.on(GetSecretValueCommand).resolves({
+      SecretString: JSON.stringify({
+        privateKeyPem: mockPrivateKey,
+        kid: "test-kid",
+        alg: "RS256",
+        createdAt: new Date().toISOString(),
+      }),
+      VersionId: "test-version-id",
+      VersionStages: ["AWSPENDING"],
+    });
 
     s3Mock.on(GetObjectCommand).rejects({ name: "NoSuchKey" });
 
     await expect(
-      testSecret(mockedSecretsManagerClient, mockedS3Client, "test-secret", "test-token")
+      testSecret(mockedSecretsManagerClient, mockedS3Client, "test-secret", "test-token"),
     ).rejects.toThrow("No keys found in JWKS document");
   });
 
   it("should throw error when key not found in JWKS", async () => {
-    secretsManagerMock
-      .on(GetSecretValueCommand)
-      .resolves({
-        SecretString: JSON.stringify({
-          privateKeyPem: mockPrivateKey,
-          kid: "test-kid",
-          alg: "RS256",
-          createdAt: new Date().toISOString(),
-        }),
-        VersionId: "test-version-id",
-        VersionStages: ["AWSPENDING"],
-      });
+    secretsManagerMock.on(GetSecretValueCommand).resolves({
+      SecretString: JSON.stringify({
+        privateKeyPem: mockPrivateKey,
+        kid: "test-kid",
+        alg: "RS256",
+        createdAt: new Date().toISOString(),
+      }),
+      VersionId: "test-version-id",
+      VersionStages: ["AWSPENDING"],
+    });
 
     s3Mock.on(GetObjectCommand).resolves({
       Body: {
@@ -167,44 +159,40 @@ zTxPPg/R3Ih9XuBRmrGGqhAH
                   e: "AQAB",
                 },
               ],
-            })
+            }),
           ),
       } as any,
     });
 
     await expect(
-      testSecret(mockedSecretsManagerClient, mockedS3Client, "test-secret", "test-token")
+      testSecret(mockedSecretsManagerClient, mockedS3Client, "test-secret", "test-token"),
     ).rejects.toThrow("no applicable key found in the JSON Web Key Set");
   });
 
   it("should handle S3 errors", async () => {
-    secretsManagerMock
-      .on(GetSecretValueCommand)
-      .resolves({
-        SecretString: JSON.stringify({
-          privateKeyPem: mockPrivateKey,
-          kid: "test-kid",
-          alg: "RS256",
-          createdAt: new Date().toISOString(),
-        }),
-        VersionId: "test-version-id",
-        VersionStages: ["AWSPENDING"],
-      });
+    secretsManagerMock.on(GetSecretValueCommand).resolves({
+      SecretString: JSON.stringify({
+        privateKeyPem: mockPrivateKey,
+        kid: "test-kid",
+        alg: "RS256",
+        createdAt: new Date().toISOString(),
+      }),
+      VersionId: "test-version-id",
+      VersionStages: ["AWSPENDING"],
+    });
 
     s3Mock.on(GetObjectCommand).rejects(new Error("S3 Error"));
 
     await expect(
-      testSecret(mockedSecretsManagerClient, mockedS3Client, "test-secret", "test-token")
+      testSecret(mockedSecretsManagerClient, mockedS3Client, "test-secret", "test-token"),
     ).rejects.toThrow("S3 Error");
   });
 
   it("should handle secrets manager errors", async () => {
-    secretsManagerMock
-      .on(GetSecretValueCommand)
-      .rejects(new Error("SecretsManager Error"));
+    secretsManagerMock.on(GetSecretValueCommand).rejects(new Error("SecretsManager Error"));
 
     await expect(
-      testSecret(mockedSecretsManagerClient, mockedS3Client, "test-secret", "test-token")
+      testSecret(mockedSecretsManagerClient, mockedS3Client, "test-secret", "test-token"),
     ).rejects.toThrow("SecretsManager Error");
   });
 });

@@ -1,8 +1,4 @@
-import {
-  GetObjectCommand,
-  PutObjectCommand,
-  S3Client,
-} from "@aws-sdk/client-s3";
+import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import {
   GetSecretValueCommand,
   PutSecretValueCommand,
@@ -63,9 +59,7 @@ describe("Utils", () => {
       process.env.MAX_TOKEN_VALIDITY_DURATION_SECONDS = "3600";
       process.env.KEY_SPEC = JSON.stringify({ algorithm: "RS256" });
 
-      expect(() => getEnvironmentConfig()).toThrow(
-        "BUCKET_NAME environment variable is required",
-      );
+      expect(() => getEnvironmentConfig()).toThrow("BUCKET_NAME environment variable is required");
     });
 
     it("should throw error when BUCKET_PATH is missing", () => {
@@ -74,9 +68,7 @@ describe("Utils", () => {
       process.env.MAX_TOKEN_VALIDITY_DURATION_SECONDS = "3600";
       process.env.KEY_SPEC = JSON.stringify({ algorithm: "RS256" });
 
-      expect(() => getEnvironmentConfig()).toThrow(
-        "BUCKET_PATH environment variable is required",
-      );
+      expect(() => getEnvironmentConfig()).toThrow("BUCKET_PATH environment variable is required");
     });
 
     it("should throw error when MIN_ACTIVATION_GRACE_PERIOD_SECONDS is invalid", () => {
@@ -98,9 +90,7 @@ describe("Utils", () => {
       process.env.MAX_TOKEN_VALIDITY_DURATION_SECONDS = "3600";
       process.env.KEY_SPEC = "invalid-json";
 
-      expect(() => getEnvironmentConfig()).toThrow(
-        "Invalid KEY_SPEC environment variable",
-      );
+      expect(() => getEnvironmentConfig()).toThrow("Invalid KEY_SPEC environment variable");
     });
   });
 
@@ -132,9 +122,7 @@ describe("Utils", () => {
     });
 
     it("should return null when secret not found", async () => {
-      secretsManagerMock
-        .on(GetSecretValueCommand)
-        .rejects({ name: "ResourceNotFoundException" });
+      secretsManagerMock.on(GetSecretValueCommand).rejects({ name: "ResourceNotFoundException" });
 
       const result = await getSecretValue(secretsManagerMock as any, {
         SecretId: "test-secret",
@@ -155,9 +143,7 @@ describe("Utils", () => {
     });
 
     it("should throw error for other AWS errors", async () => {
-      secretsManagerMock
-        .on(GetSecretValueCommand)
-        .rejects(new Error("AWS Error"));
+      secretsManagerMock.on(GetSecretValueCommand).rejects(new Error("AWS Error"));
 
       await expect(
         getSecretValue(secretsManagerMock as any, { SecretId: "test-secret" }),
@@ -183,12 +169,8 @@ describe("Utils", () => {
         secretValue: mockSecretValue,
       });
 
-      expect(
-        secretsManagerMock.commandCalls(PutSecretValueCommand),
-      ).toHaveLength(1);
-      expect(
-        secretsManagerMock.commandCalls(PutSecretValueCommand)[0].args[0].input,
-      ).toEqual({
+      expect(secretsManagerMock.commandCalls(PutSecretValueCommand)).toHaveLength(1);
+      expect(secretsManagerMock.commandCalls(PutSecretValueCommand)[0].args[0].input).toEqual({
         SecretId: "test-secret",
         ClientRequestToken: "test-token",
         SecretString: JSON.stringify(mockSecretValue),
@@ -196,9 +178,7 @@ describe("Utils", () => {
     });
 
     it("should handle AWS errors", async () => {
-      secretsManagerMock
-        .on(PutSecretValueCommand)
-        .rejects(new Error("AWS Error"));
+      secretsManagerMock.on(PutSecretValueCommand).rejects(new Error("AWS Error"));
 
       await expect(
         putSecretValue(secretsManagerMock as any, {
@@ -222,11 +202,7 @@ describe("Utils", () => {
         } as any,
       });
 
-      const result = await getJwksFromS3(
-        mockedS3Client,
-        "test-bucket",
-        ".well-known/jwks.json",
-      );
+      const result = await getJwksFromS3(mockedS3Client, "test-bucket", ".well-known/jwks.json");
 
       expect(result).toEqual(mockJwks);
       expect(s3Mock.commandCalls(GetObjectCommand)).toHaveLength(1);
@@ -239,11 +215,7 @@ describe("Utils", () => {
     it("should return empty JWKS when file not found", async () => {
       s3Mock.on(GetObjectCommand).rejects({ name: "NoSuchKey" });
 
-      const result = await getJwksFromS3(
-        mockedS3Client,
-        "test-bucket",
-        ".well-known/jwks.json",
-      );
+      const result = await getJwksFromS3(mockedS3Client, "test-bucket", ".well-known/jwks.json");
 
       expect(result).toEqual({ keys: [] });
     });
@@ -300,12 +272,7 @@ describe("Utils", () => {
 
       s3Mock.on(PutObjectCommand).resolves({});
 
-      await updateJwksFile(
-        mockedS3Client,
-        "test-bucket",
-        "jwks.json",
-        mockJwks,
-      );
+      await updateJwksFile(mockedS3Client, "test-bucket", "jwks.json", mockJwks);
 
       expect(s3Mock.commandCalls(PutObjectCommand)).toHaveLength(1);
       expect(s3Mock.commandCalls(PutObjectCommand)[0].args[0].input).toEqual({

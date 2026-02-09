@@ -1,12 +1,5 @@
-import {
-  GetObjectCommand,
-  PutObjectCommand,
-  S3Client,
-} from "@aws-sdk/client-s3";
-import {
-  GetSecretValueCommand,
-  SecretsManagerClient,
-} from "@aws-sdk/client-secrets-manager";
+import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { GetSecretValueCommand, SecretsManagerClient } from "@aws-sdk/client-secrets-manager";
 import { mockClient } from "aws-sdk-client-mock";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -105,11 +98,7 @@ describe("Cleanup Expired Keys", () => {
 
     s3Mock.on(PutObjectCommand).resolves({});
 
-    await cleanupExpiredKeys(
-      mockedSecretsManagerClient,
-      mockedS3Client,
-      "test-secret-arn",
-    );
+    await cleanupExpiredKeys(mockedSecretsManagerClient, mockedS3Client, "test-secret-arn");
 
     const putCalls = s3Mock.commandCalls(PutObjectCommand);
     expect(putCalls).toHaveLength(1);
@@ -180,11 +169,7 @@ describe("Cleanup Expired Keys", () => {
 
     s3Mock.on(PutObjectCommand).resolves({});
 
-    await cleanupExpiredKeys(
-      mockedSecretsManagerClient,
-      mockedS3Client,
-      "test-secret-arn",
-    );
+    await cleanupExpiredKeys(mockedSecretsManagerClient, mockedS3Client, "test-secret-arn");
 
     const putCalls = s3Mock.commandCalls(PutObjectCommand);
     expect(putCalls).toHaveLength(1);
@@ -214,11 +199,7 @@ describe("Cleanup Expired Keys", () => {
       })
       .rejects({ name: "ResourceNotFoundException" });
 
-    await cleanupExpiredKeys(
-      mockedSecretsManagerClient,
-      mockedS3Client,
-      "test-secret-arn",
-    );
+    await cleanupExpiredKeys(mockedSecretsManagerClient, mockedS3Client, "test-secret-arn");
 
     expect(s3Mock.commandCalls(GetObjectCommand)).toHaveLength(0);
     expect(s3Mock.commandCalls(PutObjectCommand)).toHaveLength(0);
@@ -248,11 +229,7 @@ describe("Cleanup Expired Keys", () => {
       } as any,
     });
 
-    await cleanupExpiredKeys(
-      mockedSecretsManagerClient,
-      mockedS3Client,
-      "test-secret-arn",
-    );
+    await cleanupExpiredKeys(mockedSecretsManagerClient, mockedS3Client, "test-secret-arn");
 
     expect(s3Mock.commandCalls(PutObjectCommand)).toHaveLength(1);
   });
@@ -278,11 +255,7 @@ describe("Cleanup Expired Keys", () => {
     s3Mock.on(PutObjectCommand).rejects(new Error("S3 Error"));
 
     await expect(
-      cleanupExpiredKeys(
-        mockedSecretsManagerClient,
-        mockedS3Client,
-        "test-secret-arn",
-      ),
+      cleanupExpiredKeys(mockedSecretsManagerClient, mockedS3Client, "test-secret-arn"),
     ).rejects.toThrow("S3 Error");
   });
 });

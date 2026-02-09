@@ -125,15 +125,9 @@ export class JwksRotation extends Construct {
       environment: {
         BUCKET_NAME: this.bucket.bucketName,
         BUCKET_PATH: bucketPath,
-        MIN_ACTIVATION_GRACE_PERIOD_SECONDS: minActivationGracePeriod
-          .toSeconds()
-          .toString(),
-        MAX_TOKEN_VALIDITY_DURATION_SECONDS: maxTokenValidityDuration
-          .toSeconds()
-          .toString(),
-        MIN_KEY_CLEANUP_GRACE_PERIOD_SECONDS: minKeyCleanupGracePeriod
-          .toSeconds()
-          .toString(),
+        MIN_ACTIVATION_GRACE_PERIOD_SECONDS: minActivationGracePeriod.toSeconds().toString(),
+        MAX_TOKEN_VALIDITY_DURATION_SECONDS: maxTokenValidityDuration.toSeconds().toString(),
+        MIN_KEY_CLEANUP_GRACE_PERIOD_SECONDS: minKeyCleanupGracePeriod.toSeconds().toString(),
         KEY_SPEC: JSON.stringify(keySpec),
       },
     });

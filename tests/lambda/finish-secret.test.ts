@@ -1,11 +1,11 @@
-import { mockClient } from "aws-sdk-client-mock";
 import { S3Client } from "@aws-sdk/client-s3";
 import {
+  GetSecretValueCommand,
   SecretsManagerClient,
   UpdateSecretVersionStageCommand,
-  GetSecretValueCommand,
 } from "@aws-sdk/client-secrets-manager";
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { mockClient } from "aws-sdk-client-mock";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("../../src/lambda/utils", async () => {
   const actual = await vi.importActual("../../src/lambda/utils");
@@ -26,7 +26,8 @@ import { finishSecret } from "../../src/lambda/finish-secret";
 const s3Mock = mockClient(S3Client);
 const secretsManagerMock = mockClient(SecretsManagerClient);
 const mockedS3Client: S3Client = s3Mock as unknown as S3Client;
-const mockedSecretsManagerClient: SecretsManagerClient = secretsManagerMock as unknown as SecretsManagerClient;
+const mockedSecretsManagerClient: SecretsManagerClient =
+  secretsManagerMock as unknown as SecretsManagerClient;
 
 describe("Finish Secret", () => {
   beforeEach(() => {
@@ -102,7 +103,7 @@ describe("Finish Secret", () => {
       .rejects({ name: "ResourceNotFoundException" });
 
     await expect(
-      finishSecret(mockedSecretsManagerClient, mockedS3Client, "test-secret", "test-token")
+      finishSecret(mockedSecretsManagerClient, mockedS3Client, "test-secret", "test-token"),
     ).rejects.toThrow("Current version not found");
   });
 
@@ -160,36 +161,30 @@ describe("Finish Secret", () => {
   });
 
   it("should handle secrets manager errors", async () => {
-    secretsManagerMock
-      .on(GetSecretValueCommand)
-      .rejects(new Error("SecretsManager Error"));
+    secretsManagerMock.on(GetSecretValueCommand).rejects(new Error("SecretsManager Error"));
 
     await expect(
-      finishSecret(mockedSecretsManagerClient, mockedS3Client, "test-secret", "test-token")
+      finishSecret(mockedSecretsManagerClient, mockedS3Client, "test-secret", "test-token"),
     ).rejects.toThrow("SecretsManager Error");
   });
 
   it("should handle update version stage errors", async () => {
-    secretsManagerMock
-      .on(GetSecretValueCommand)
-      .resolves({
-        SecretString: JSON.stringify({
-          privateKeyPem: "current-private-key",
-          kid: "current-kid",
-          alg: "RS256",
-          createdAt: new Date().toISOString(),
-          publicKeyJwk: { kty: "RSA" },
-        }),
-        VersionId: "current-version-id",
-        VersionStages: ["AWSCURRENT"],
-      });
+    secretsManagerMock.on(GetSecretValueCommand).resolves({
+      SecretString: JSON.stringify({
+        privateKeyPem: "current-private-key",
+        kid: "current-kid",
+        alg: "RS256",
+        createdAt: new Date().toISOString(),
+        publicKeyJwk: { kty: "RSA" },
+      }),
+      VersionId: "current-version-id",
+      VersionStages: ["AWSCURRENT"],
+    });
 
-    secretsManagerMock
-      .on(UpdateSecretVersionStageCommand)
-      .rejects(new Error("Update Error"));
+    secretsManagerMock.on(UpdateSecretVersionStageCommand).rejects(new Error("Update Error"));
 
     await expect(
-      finishSecret(mockedSecretsManagerClient, mockedS3Client, "test-secret", "test-token")
+      finishSecret(mockedSecretsManagerClient, mockedS3Client, "test-secret", "test-token"),
     ).rejects.toThrow("Update Error");
   });
 });
