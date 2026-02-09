@@ -116,7 +116,7 @@ export class JwksRotation extends Construct {
     }
 
     this.rotationLambda = new lambda.Function(this, "RotationLambda", {
-      runtime: lambda.Runtime.NODEJS_22_X,
+      runtime: lambda.Runtime.NODEJS_24_X,
       handler: "rotation-handler.handler",
       code: lambda.Code.fromAsset(path.join(__dirname, "lambda"), {
         exclude: ["*.d.ts", "*.map"],

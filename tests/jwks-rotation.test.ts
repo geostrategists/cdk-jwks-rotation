@@ -27,7 +27,7 @@ describe("JwksRotation Construct", () => {
     });
 
     template.hasResourceProperties("AWS::Lambda::Function", {
-      Runtime: "nodejs22.x",
+      Runtime: "nodejs24.x",
       Handler: "rotation-handler.handler",
     });
 
