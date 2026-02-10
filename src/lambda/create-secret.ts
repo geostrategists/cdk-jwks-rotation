@@ -1,11 +1,6 @@
 import type { S3Client } from "@aws-sdk/client-s3";
 import type { SecretsManagerClient } from "@aws-sdk/client-secrets-manager";
-import {
-  exportJWK,
-  exportPKCS8,
-  type GenerateKeyPairResult,
-  generateKeyPair,
-} from "jose";
+import { exportJWK, exportPKCS8, type GenerateKeyPairResult, generateKeyPair } from "jose";
 import { nanoid } from "nanoid";
 import type { KeySpec } from "../jwks-rotation";
 import type { SecretValue } from "./types";
@@ -103,9 +98,7 @@ export async function createSecret(
     VersionStages: ["NEXT"],
     secretValue: newNextKeyPair.secretValue,
   });
-  console.log(
-    `Stored next key ${newNextKeyPair.secretValue.kid} in NEXT version`,
-  );
+  console.log(`Stored next key ${newNextKeyPair.secretValue.kid} in NEXT version`);
 
   // we need to build the JWKS file now so that testSecret can use it
   await regenerateAndPublishJwks(secretsClient, s3Client, secretId, {

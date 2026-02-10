@@ -1,10 +1,10 @@
-import { mockClient } from "aws-sdk-client-mock";
 import { S3Client } from "@aws-sdk/client-s3";
 import { SecretsManagerClient } from "@aws-sdk/client-secrets-manager";
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { handler } from "../../src/lambda/rotation-handler";
 import type { SecretsManagerRotationEvent } from "aws-lambda";
+import { mockClient } from "aws-sdk-client-mock";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { CleanupEvent } from "../../src/lambda/rotation-handler";
+import { handler } from "../../src/lambda/rotation-handler";
 
 const s3Mock = mockClient(S3Client);
 const secretsManagerMock = mockClient(SecretsManagerClient);
@@ -48,7 +48,7 @@ describe("Rotation Handler", () => {
         expect.any(SecretsManagerClient),
         expect.any(S3Client),
         "test-secret",
-        "test-token"
+        "test-token",
       );
     });
 
@@ -79,7 +79,7 @@ describe("Rotation Handler", () => {
         expect.any(SecretsManagerClient),
         expect.any(S3Client),
         "test-secret",
-        "test-token"
+        "test-token",
       );
     });
 
@@ -96,7 +96,7 @@ describe("Rotation Handler", () => {
         expect.any(SecretsManagerClient),
         expect.any(S3Client),
         "test-secret",
-        "test-token"
+        "test-token",
       );
     });
 
@@ -136,7 +136,7 @@ describe("Rotation Handler", () => {
       expect(cleanupExpiredKeys).toHaveBeenCalledWith(
         expect.any(SecretsManagerClient),
         expect.any(S3Client),
-        "arn:aws:secretsmanager:us-east-1:123456789012:secret:test-secret"
+        "arn:aws:secretsmanager:us-east-1:123456789012:secret:test-secret",
       );
     });
 

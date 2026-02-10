@@ -30,9 +30,7 @@ export async function handler(event: LambdaEvent): Promise<void> {
   await handleRotationEvent(event as SecretsManagerRotationEvent);
 }
 
-async function handleRotationEvent(
-  event: SecretsManagerRotationEvent,
-): Promise<void> {
+async function handleRotationEvent(event: SecretsManagerRotationEvent): Promise<void> {
   const { Step, SecretId, ClientRequestToken: Token } = event;
 
   try {
