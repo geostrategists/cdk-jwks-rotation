@@ -19,9 +19,7 @@ the JWKS file (after a configurable grace period).
 ## Installation
 
 ```bash
-npm install @geostrategists/cdk-jwks-rotation
-# or
-yarn add @geostrategists/cdk-jwks-rotation
+pnpm add @geostrategists/cdk-jwks-rotation
 ```
 
 ## Types
@@ -107,9 +105,9 @@ The construct grants the rotation Lambda:
 
 Install and scripts:
 ```bash
-yarn install
-yarn lint
-yarn typecheck
-yarn build
-yarn test:run
+pnpm install
+pnpm lint
+pnpm typecheck
+pnpm build
+pnpm test:run
 ```
