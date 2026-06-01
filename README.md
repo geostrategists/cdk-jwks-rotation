@@ -19,6 +19,8 @@ the JWKS file (after a configurable grace period).
 ## Installation
 
 ```bash
+npm install @geostrategists/cdk-jwks-rotation
+# or
 pnpm add @geostrategists/cdk-jwks-rotation
 ```
 
