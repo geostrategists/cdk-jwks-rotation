@@ -23,8 +23,7 @@ import { cleanupExpiredKeys } from "../../src/lambda/cleanup-expired-keys";
 const s3Mock = mockClient(S3Client);
 const secretsManagerMock = mockClient(SecretsManagerClient);
 const mockedS3Client: S3Client = s3Mock as unknown as S3Client;
-const mockedSecretsManagerClient: SecretsManagerClient =
-  secretsManagerMock as unknown as SecretsManagerClient;
+const mockedSecretsManagerClient: SecretsManagerClient = secretsManagerMock as unknown as SecretsManagerClient;
 
 describe("Cleanup Expired Keys", () => {
   beforeEach(() => {
@@ -254,8 +253,8 @@ describe("Cleanup Expired Keys", () => {
 
     s3Mock.on(PutObjectCommand).rejects(new Error("S3 Error"));
 
-    await expect(
-      cleanupExpiredKeys(mockedSecretsManagerClient, mockedS3Client, "test-secret-arn"),
-    ).rejects.toThrow("S3 Error");
+    await expect(cleanupExpiredKeys(mockedSecretsManagerClient, mockedS3Client, "test-secret-arn")).rejects.toThrow(
+      "S3 Error",
+    );
   });
 });

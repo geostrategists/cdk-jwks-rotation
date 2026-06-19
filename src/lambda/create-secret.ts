@@ -4,12 +4,7 @@ import { exportJWK, exportPKCS8, type GenerateKeyPairResult, generateKeyPair } f
 import { nanoid } from "nanoid";
 import type { KeySpec } from "../jwks-rotation";
 import type { SecretValue } from "./types";
-import {
-  getEnvironmentConfig,
-  getSecretValue,
-  putSecretValue,
-  regenerateAndPublishJwks,
-} from "./utils";
+import { getEnvironmentConfig, getSecretValue, putSecretValue, regenerateAndPublishJwks } from "./utils";
 
 export async function createSecret(
   secretsClient: SecretsManagerClient,
@@ -35,9 +30,7 @@ export async function createSecret(
 
   if (!nextSecret) {
     if (currentSecret?.secretValue.activatedAt) {
-      console.log(
-        "No NEXT key exists but current key found. Creating NEXT key and aborting rotation.",
-      );
+      console.log("No NEXT key exists but current key found. Creating NEXT key and aborting rotation.");
       const newNextKeyPair = await generateJwksKeyPair(keySpec);
 
       await putSecretValue(secretsClient, {
@@ -56,9 +49,7 @@ export async function createSecret(
       throw new Error("Created NEXT key. Aborting rotation as requested.");
     }
 
-    console.log(
-      "No current secret or current in initial state. Creating key for immediate activation.",
-    );
+    console.log("No current secret or current in initial state. Creating key for immediate activation.");
     const keyPair = await generateJwksKeyPair(keySpec);
     nextKeyData = keyPair.secretValue;
   } else {

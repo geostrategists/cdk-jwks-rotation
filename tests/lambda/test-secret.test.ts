@@ -7,8 +7,7 @@ import { testSecret } from "../../src/lambda/test-secret";
 const s3Mock = mockClient(S3Client);
 const secretsManagerMock = mockClient(SecretsManagerClient);
 const mockedS3Client: S3Client = s3Mock as unknown as S3Client;
-const mockedSecretsManagerClient: SecretsManagerClient =
-  secretsManagerMock as unknown as SecretsManagerClient;
+const mockedSecretsManagerClient: SecretsManagerClient = secretsManagerMock as unknown as SecretsManagerClient;
 
 vi.mock("../../src/lambda/utils", async () => {
   const actual = await vi.importActual("../../src/lambda/utils");
@@ -108,9 +107,9 @@ zTxPPg/R3Ih9XuBRmrGGqhAH
   it("should throw error when AWSPENDING secret not found", async () => {
     secretsManagerMock.on(GetSecretValueCommand).rejects({ name: "ResourceNotFoundException" });
 
-    await expect(
-      testSecret(mockedSecretsManagerClient, mockedS3Client, "test-secret", "test-token"),
-    ).rejects.toThrow("AWSPENDING version not found");
+    await expect(testSecret(mockedSecretsManagerClient, mockedS3Client, "test-secret", "test-token")).rejects.toThrow(
+      "AWSPENDING version not found",
+    );
   });
 
   it("should throw error when JWKS file not found", async () => {
@@ -127,9 +126,9 @@ zTxPPg/R3Ih9XuBRmrGGqhAH
 
     s3Mock.on(GetObjectCommand).rejects({ name: "NoSuchKey" });
 
-    await expect(
-      testSecret(mockedSecretsManagerClient, mockedS3Client, "test-secret", "test-token"),
-    ).rejects.toThrow("No keys found in JWKS document");
+    await expect(testSecret(mockedSecretsManagerClient, mockedS3Client, "test-secret", "test-token")).rejects.toThrow(
+      "No keys found in JWKS document",
+    );
   });
 
   it("should throw error when key not found in JWKS", async () => {
@@ -164,9 +163,9 @@ zTxPPg/R3Ih9XuBRmrGGqhAH
       } as any,
     });
 
-    await expect(
-      testSecret(mockedSecretsManagerClient, mockedS3Client, "test-secret", "test-token"),
-    ).rejects.toThrow("no applicable key found in the JSON Web Key Set");
+    await expect(testSecret(mockedSecretsManagerClient, mockedS3Client, "test-secret", "test-token")).rejects.toThrow(
+      "no applicable key found in the JSON Web Key Set",
+    );
   });
 
   it("should handle S3 errors", async () => {
@@ -183,16 +182,16 @@ zTxPPg/R3Ih9XuBRmrGGqhAH
 
     s3Mock.on(GetObjectCommand).rejects(new Error("S3 Error"));
 
-    await expect(
-      testSecret(mockedSecretsManagerClient, mockedS3Client, "test-secret", "test-token"),
-    ).rejects.toThrow("S3 Error");
+    await expect(testSecret(mockedSecretsManagerClient, mockedS3Client, "test-secret", "test-token")).rejects.toThrow(
+      "S3 Error",
+    );
   });
 
   it("should handle secrets manager errors", async () => {
     secretsManagerMock.on(GetSecretValueCommand).rejects(new Error("SecretsManager Error"));
 
-    await expect(
-      testSecret(mockedSecretsManagerClient, mockedS3Client, "test-secret", "test-token"),
-    ).rejects.toThrow("SecretsManager Error");
+    await expect(testSecret(mockedSecretsManagerClient, mockedS3Client, "test-secret", "test-token")).rejects.toThrow(
+      "SecretsManager Error",
+    );
   });
 });
