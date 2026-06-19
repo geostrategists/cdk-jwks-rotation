@@ -2,6 +2,7 @@ import { Duration, Stack } from "aws-cdk-lib";
 import { Template } from "aws-cdk-lib/assertions";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import { describe, expect, it } from "vitest";
+
 import { JwksRotation } from "../src/jwks-rotation";
 
 describe("JwksRotation Construct", () => {

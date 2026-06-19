@@ -2,6 +2,7 @@ import type { S3Client } from "@aws-sdk/client-s3";
 import type { SecretsManagerClient } from "@aws-sdk/client-secrets-manager";
 import { exportJWK, exportPKCS8, type GenerateKeyPairResult, generateKeyPair } from "jose";
 import { nanoid } from "nanoid";
+
 import type { KeySpec } from "../jwks-rotation";
 import type { SecretValue } from "./types";
 import { getEnvironmentConfig, getSecretValue, putSecretValue, regenerateAndPublishJwks } from "./utils";
@@ -31,19 +32,19 @@ export async function createSecret(
   if (!nextSecret) {
     if (currentSecret?.secretValue.activatedAt) {
       console.log("No NEXT key exists but current key found. Creating NEXT key and aborting rotation.");
-      const newNextKeyPair = await generateJwksKeyPair(keySpec);
+      const missingNextKeyPair = await generateJwksKeyPair(keySpec);
 
       await putSecretValue(secretsClient, {
         SecretId: secretId,
         ClientRequestToken: `next-key-${currentSecret.VersionId}`,
         VersionStages: ["NEXT"],
-        secretValue: newNextKeyPair.secretValue,
+        secretValue: missingNextKeyPair.secretValue,
       });
       console.log("Created NEXT key and aborting rotation");
 
       await regenerateAndPublishJwks(secretsClient, s3Client, secretId, {
         currentSecret: currentSecret?.secretValue,
-        nextSecret: newNextKeyPair.secretValue,
+        nextSecret: missingNextKeyPair.secretValue,
       });
 
       throw new Error("Created NEXT key. Aborting rotation as requested.");

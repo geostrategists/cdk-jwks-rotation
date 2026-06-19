@@ -1,6 +1,7 @@
 import type { S3Client } from "@aws-sdk/client-s3";
 import type { SecretsManagerClient } from "@aws-sdk/client-secrets-manager";
 import { createLocalJWKSet, importPKCS8, jwtVerify, SignJWT } from "jose";
+
 import { getEnvironmentConfig, getJwksFromS3, getSecretValue } from "./utils";
 
 export async function testSecret(
