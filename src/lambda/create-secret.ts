@@ -32,19 +32,19 @@ export async function createSecret(
   if (!nextSecret) {
     if (currentSecret?.secretValue.activatedAt) {
       console.log("No NEXT key exists but current key found. Creating NEXT key and aborting rotation.");
-      const abortNextKeyPair = await generateJwksKeyPair(keySpec);
+      const missingNextKeyPair = await generateJwksKeyPair(keySpec);
 
       await putSecretValue(secretsClient, {
         SecretId: secretId,
         ClientRequestToken: `next-key-${currentSecret.VersionId}`,
         VersionStages: ["NEXT"],
-        secretValue: abortNextKeyPair.secretValue,
+        secretValue: missingNextKeyPair.secretValue,
       });
       console.log("Created NEXT key and aborting rotation");
 
       await regenerateAndPublishJwks(secretsClient, s3Client, secretId, {
         currentSecret: currentSecret?.secretValue,
-        nextSecret: abortNextKeyPair.secretValue,
+        nextSecret: missingNextKeyPair.secretValue,
       });
 
       throw new Error("Created NEXT key. Aborting rotation as requested.");
