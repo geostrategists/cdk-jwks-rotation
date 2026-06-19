@@ -1,9 +1,5 @@
 import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import {
-  GetSecretValueCommand,
-  PutSecretValueCommand,
-  SecretsManagerClient,
-} from "@aws-sdk/client-secrets-manager";
+import { GetSecretValueCommand, PutSecretValueCommand, SecretsManagerClient } from "@aws-sdk/client-secrets-manager";
 import { mockClient } from "aws-sdk-client-mock";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -26,8 +22,7 @@ import { createSecret } from "../../src/lambda/create-secret";
 const s3Mock = mockClient(S3Client);
 const secretsManagerMock = mockClient(SecretsManagerClient);
 const mockedS3Client: S3Client = s3Mock as unknown as S3Client;
-const mockedSecretsManagerClient: SecretsManagerClient =
-  secretsManagerMock as unknown as SecretsManagerClient;
+const mockedSecretsManagerClient: SecretsManagerClient = secretsManagerMock as unknown as SecretsManagerClient;
 
 describe("Create Secret", () => {
   beforeEach(() => {
@@ -119,9 +114,9 @@ describe("Create Secret", () => {
         VersionStages: ["NEXT"],
       });
 
-    await expect(
-      createSecret(secretsManagerMock as any, s3Mock as any, "test-secret", "test-token"),
-    ).rejects.toThrow("Next key is too new");
+    await expect(createSecret(secretsManagerMock as any, s3Mock as any, "test-secret", "test-token")).rejects.toThrow(
+      "Next key is too new",
+    );
 
     expect(secretsManagerMock.commandCalls(PutSecretValueCommand)).toHaveLength(0);
   });
@@ -142,9 +137,9 @@ describe("Create Secret", () => {
   it("should handle secrets manager errors", async () => {
     secretsManagerMock.on(GetSecretValueCommand).rejects(new Error("SecretsManager Error"));
 
-    await expect(
-      createSecret(secretsManagerMock as any, s3Mock as any, "test-secret", "test-token"),
-    ).rejects.toThrow("SecretsManager Error");
+    await expect(createSecret(secretsManagerMock as any, s3Mock as any, "test-secret", "test-token")).rejects.toThrow(
+      "SecretsManager Error",
+    );
   });
 
   it("should generate ES256 keys correctly", async () => {
@@ -199,9 +194,9 @@ describe("Create Secret", () => {
     });
     s3Mock.on(PutObjectCommand).resolves({});
 
-    await expect(
-      createSecret(secretsManagerMock as any, s3Mock as any, "test-secret", "test-token"),
-    ).rejects.toThrow("Created NEXT key. Aborting rotation as requested.");
+    await expect(createSecret(secretsManagerMock as any, s3Mock as any, "test-secret", "test-token")).rejects.toThrow(
+      "Created NEXT key. Aborting rotation as requested.",
+    );
 
     const putCalls = secretsManagerMock.commandCalls(PutSecretValueCommand);
     expect(putCalls).toHaveLength(1);

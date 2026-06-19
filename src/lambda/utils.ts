@@ -128,11 +128,7 @@ export async function putSecretValue(
   await client.send(command);
 }
 
-export async function getJwksFromS3(
-  client: S3Client,
-  bucketName: string,
-  key: string,
-): Promise<JSONWebKeySet> {
+export async function getJwksFromS3(client: S3Client, bucketName: string, key: string): Promise<JSONWebKeySet> {
   try {
     const command = new GetObjectCommand({
       Bucket: bucketName,
@@ -186,8 +182,7 @@ export async function buildJwks(
   secretId: string,
   options?: BuildJwksOptions,
 ): Promise<JSONWebKeySet> {
-  const { minKeyCleanupGracePeriodSeconds, maxTokenValidityDurationSeconds } =
-    getEnvironmentConfig();
+  const { minKeyCleanupGracePeriodSeconds, maxTokenValidityDurationSeconds } = getEnvironmentConfig();
 
   const keys: JWK[] = [];
 
@@ -219,8 +214,7 @@ export async function buildJwks(
 
     if (
       !currentActivatedAgoSeconds ||
-      currentActivatedAgoSeconds <=
-        maxTokenValidityDurationSeconds + minKeyCleanupGracePeriodSeconds
+      currentActivatedAgoSeconds <= maxTokenValidityDurationSeconds + minKeyCleanupGracePeriodSeconds
     ) {
       addJwk(previous);
     }

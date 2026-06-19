@@ -1,9 +1,5 @@
 import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import {
-  GetSecretValueCommand,
-  PutSecretValueCommand,
-  SecretsManagerClient,
-} from "@aws-sdk/client-secrets-manager";
+import { GetSecretValueCommand, PutSecretValueCommand, SecretsManagerClient } from "@aws-sdk/client-secrets-manager";
 import { mockClient } from "aws-sdk-client-mock";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
@@ -17,8 +13,7 @@ import {
 const s3Mock = mockClient(S3Client);
 const secretsManagerMock = mockClient(SecretsManagerClient);
 const mockedS3Client: S3Client = s3Mock as unknown as S3Client;
-const mockedSecretsManagerClient: SecretsManagerClient =
-  secretsManagerMock as unknown as SecretsManagerClient;
+const mockedSecretsManagerClient: SecretsManagerClient = secretsManagerMock as unknown as SecretsManagerClient;
 
 describe("Utils", () => {
   beforeEach(() => {
@@ -78,9 +73,7 @@ describe("Utils", () => {
       process.env.MAX_TOKEN_VALIDITY_DURATION_SECONDS = "3600";
       process.env.KEY_SPEC = JSON.stringify({ algorithm: "RS256" });
 
-      expect(() => getEnvironmentConfig()).toThrow(
-        "MIN_ACTIVATION_GRACE_PERIOD_SECONDS must be a valid number",
-      );
+      expect(() => getEnvironmentConfig()).toThrow("MIN_ACTIVATION_GRACE_PERIOD_SECONDS must be a valid number");
     });
 
     it("should throw error when KEY_SPEC is invalid JSON", () => {
@@ -137,17 +130,15 @@ describe("Utils", () => {
         VersionStages: ["AWSCURRENT"],
       });
 
-      await expect(
-        getSecretValue(mockedSecretsManagerClient, { SecretId: "test-secret" }),
-      ).rejects.toThrow("Secret version has no VersionId");
+      await expect(getSecretValue(mockedSecretsManagerClient, { SecretId: "test-secret" })).rejects.toThrow(
+        "Secret version has no VersionId",
+      );
     });
 
     it("should throw error for other AWS errors", async () => {
       secretsManagerMock.on(GetSecretValueCommand).rejects(new Error("AWS Error"));
 
-      await expect(
-        getSecretValue(secretsManagerMock as any, { SecretId: "test-secret" }),
-      ).rejects.toThrow("AWS Error");
+      await expect(getSecretValue(secretsManagerMock as any, { SecretId: "test-secret" })).rejects.toThrow("AWS Error");
     });
   });
 
@@ -227,17 +218,15 @@ describe("Utils", () => {
         } as any,
       });
 
-      await expect(
-        getJwksFromS3(mockedS3Client, "test-bucket", ".well-known/jwks.json"),
-      ).rejects.toThrow("Empty response from S3");
+      await expect(getJwksFromS3(mockedS3Client, "test-bucket", ".well-known/jwks.json")).rejects.toThrow(
+        "Empty response from S3",
+      );
     });
 
     it("should handle other S3 errors", async () => {
       s3Mock.on(GetObjectCommand).rejects(new Error("S3 Error"));
 
-      await expect(
-        getJwksFromS3(mockedS3Client, "test-bucket", ".well-known/jwks.json"),
-      ).rejects.toThrow("S3 Error");
+      await expect(getJwksFromS3(mockedS3Client, "test-bucket", ".well-known/jwks.json")).rejects.toThrow("S3 Error");
     });
   });
 
@@ -249,12 +238,7 @@ describe("Utils", () => {
 
       s3Mock.on(PutObjectCommand).resolves({});
 
-      const result = await updateJwksFile(
-        mockedS3Client,
-        "test-bucket",
-        ".well-known/jwks.json",
-        mockJwks,
-      );
+      const result = await updateJwksFile(mockedS3Client, "test-bucket", ".well-known/jwks.json", mockJwks);
 
       expect(result).toEqual(mockJwks);
       expect(s3Mock.commandCalls(PutObjectCommand)).toHaveLength(1);

@@ -26,8 +26,7 @@ import { finishSecret } from "../../src/lambda/finish-secret";
 const s3Mock = mockClient(S3Client);
 const secretsManagerMock = mockClient(SecretsManagerClient);
 const mockedS3Client: S3Client = s3Mock as unknown as S3Client;
-const mockedSecretsManagerClient: SecretsManagerClient =
-  secretsManagerMock as unknown as SecretsManagerClient;
+const mockedSecretsManagerClient: SecretsManagerClient = secretsManagerMock as unknown as SecretsManagerClient;
 
 describe("Finish Secret", () => {
   beforeEach(() => {
@@ -102,9 +101,9 @@ describe("Finish Secret", () => {
       })
       .rejects({ name: "ResourceNotFoundException" });
 
-    await expect(
-      finishSecret(mockedSecretsManagerClient, mockedS3Client, "test-secret", "test-token"),
-    ).rejects.toThrow("Current version not found");
+    await expect(finishSecret(mockedSecretsManagerClient, mockedS3Client, "test-secret", "test-token")).rejects.toThrow(
+      "Current version not found",
+    );
   });
 
   it("should add deactivation timestamp to previous version", async () => {
@@ -163,9 +162,9 @@ describe("Finish Secret", () => {
   it("should handle secrets manager errors", async () => {
     secretsManagerMock.on(GetSecretValueCommand).rejects(new Error("SecretsManager Error"));
 
-    await expect(
-      finishSecret(mockedSecretsManagerClient, mockedS3Client, "test-secret", "test-token"),
-    ).rejects.toThrow("SecretsManager Error");
+    await expect(finishSecret(mockedSecretsManagerClient, mockedS3Client, "test-secret", "test-token")).rejects.toThrow(
+      "SecretsManager Error",
+    );
   });
 
   it("should handle update version stage errors", async () => {
@@ -183,8 +182,8 @@ describe("Finish Secret", () => {
 
     secretsManagerMock.on(UpdateSecretVersionStageCommand).rejects(new Error("Update Error"));
 
-    await expect(
-      finishSecret(mockedSecretsManagerClient, mockedS3Client, "test-secret", "test-token"),
-    ).rejects.toThrow("Update Error");
+    await expect(finishSecret(mockedSecretsManagerClient, mockedS3Client, "test-secret", "test-token")).rejects.toThrow(
+      "Update Error",
+    );
   });
 });
