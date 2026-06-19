@@ -9,11 +9,11 @@ There is a [blog post by Jan Brennenstuhl
 at Zalando](https://engineering.zalando.com/posts/2025/01/automated-json-web-key-rotation.html)
 which nicely explains the general concept.
 
-The construct uses AWS Secrets Manager rotation to manage the lifecycle of the keys. 
+The construct uses AWS Secrets Manager rotation to manage the lifecycle of the keys.
 Whenever a new key is rotated in, the next key is already generated, and its public key is added to the JWKS file.
 This allows consumers to have refetched the JWKS in time, and be prepared when the next key is activated.
 The next key is stored in the same secret in a separate version labeled "NEXT".
-Whenever a key is retired and the maximum token lifetime has passed, the corresponding public key is removed from 
+Whenever a key is retired and the maximum token lifetime has passed, the corresponding public key is removed from
 the JWKS file (after a configurable grace period).
 
 ## Installation
@@ -66,11 +66,11 @@ interface SecretValue {
 - `minKeyCleanupGracePeriod`: Grace period before deleting old keys after max token validity duration has passed. Default: `Duration.hours(6)`.
 
 ```ts
-import { JwksRotation } from 'cdk-jwks-rotation';
+import { JwksRotation } from "cdk-jwks-rotation";
 
-new JwksRotation(this, 'JwksRotation', {
-  secretName: 'my-jwks-secret',
-  keySpec: { algorithm: 'ES256' },
+new JwksRotation(this, "JwksRotation", {
+  secretName: "my-jwks-secret",
+  keySpec: { algorithm: "ES256" },
   maxTokenValidityDuration: Duration.seconds(3600),
   // Optional, these are the default values:
   bucket: undefined, // or: myBucket,
@@ -85,6 +85,7 @@ new JwksRotation(this, 'JwksRotation', {
 ## IAM and permissions
 
 The construct grants the rotation Lambda:
+
 - Secrets Manager: DescribeSecret, GetSecretValue, PutSecretValue, UpdateSecretVersionStage (scoped to the created secret)
 - S3 bucket read/write for the JWKS object
 
@@ -106,6 +107,7 @@ The construct grants the rotation Lambda:
 ## Development
 
 Install and scripts:
+
 ```bash
 pnpm install
 pnpm lint

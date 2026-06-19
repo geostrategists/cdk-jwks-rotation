@@ -7,6 +7,7 @@ import {
   type SecretsManagerClient,
 } from "@aws-sdk/client-secrets-manager";
 import type { JSONWebKeySet, JWK } from "jose";
+
 import type { KeySpec } from "../jwks-rotation";
 import type { SecretValue } from "./types";
 
@@ -70,7 +71,7 @@ export function getEnvironmentConfig(): EnvironmentConfig {
   let keySpec: KeySpec;
   try {
     keySpec = JSON.parse(keySpecString);
-  } catch (_error) {
+  } catch {
     throw new Error("Invalid KEY_SPEC environment variable");
   }
 
@@ -95,7 +96,9 @@ export async function getSecretValue(
   try {
     const response = await client.send(new GetSecretValueCommand(input));
 
-    if (!response?.SecretString) return null;
+    if (!response?.SecretString) {
+      return null;
+    }
 
     const { VersionId, VersionStages } = response;
     if (!VersionId) {
@@ -201,10 +204,14 @@ export async function buildJwks(
   };
 
   const next = await getJwk(options?.nextSecret, "NEXT");
-  if (next) addJwk(next);
+  if (next) {
+    addJwk(next);
+  }
 
   const current = await getJwk(options?.currentSecret, "AWSCURRENT");
-  if (current?.activatedAt) addJwk(current);
+  if (current?.activatedAt) {
+    addJwk(current);
+  }
 
   const previous = await getJwk(options?.previousSecret, "AWSPREVIOUS");
   if (previous?.activatedAt) {

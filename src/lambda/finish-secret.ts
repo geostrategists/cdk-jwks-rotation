@@ -1,5 +1,6 @@
 import type { S3Client } from "@aws-sdk/client-s3";
 import { type SecretsManagerClient, UpdateSecretVersionStageCommand } from "@aws-sdk/client-secrets-manager";
+
 import { getSecretValue, regenerateAndPublishJwks } from "./utils";
 
 export async function finishSecret(

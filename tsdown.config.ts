@@ -9,10 +9,12 @@ export default defineConfig([
     clean: true,
     target: "es2022",
     outDir: "dist",
-    external: [/^@aws-sdk\/.*/],
+    deps: {
+      neverBundle: [/^@aws-sdk\/.*/],
+      onlyBundle: false,
+    },
     treeshake: true,
     minify: false,
-    inlineOnly: false,
   },
   {
     entry: ["src/lambda/rotation-handler.ts"],
@@ -22,9 +24,11 @@ export default defineConfig([
     clean: false,
     target: "es2022",
     outDir: "dist/lambda",
-    external: [/^@aws-sdk\/.*/],
+    deps: {
+      neverBundle: [/^@aws-sdk\/.*/],
+      onlyBundle: false,
+    },
     treeshake: true,
     minify: false,
-    inlineOnly: false,
   },
 ]);

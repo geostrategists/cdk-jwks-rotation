@@ -14,32 +14,23 @@ jobs:
       contents: read
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v6
 
-      - name: Install Node.js
-        uses: actions/setup-node@v5
-        with:
-          node-version-file: .nvmrc
-          package-manager-cache: false
+      - name: Setup Node and Install Dependencies
+        uses: ./.github/actions/setup-node-and-install-dependencies
 
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: Configure Dependency Cache
-        uses: actions/setup-node@v5
-
-      - name: Install
-        run: pnpm install --frozen-lockfile
-
-      - name: Typecheck
-        run: pnpm typecheck
-
-      - name: Lint
+      - name: Run oxlint
         run: pnpm lint
 
-      - name: Format check
+      - name: Check code formatting
         run: pnpm format:check
 
-      - name: Test
-        run: pnpm test -- --run
+      - name: Run Typecheck
+        run: pnpm typecheck
+
+      - name: Run Tests
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build

@@ -15,20 +15,10 @@ jobs:
       pull-requests: write
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - name: Install Node.js
-        uses: actions/setup-node@v5
-        with:
-          node-version-file: .nvmrc
-          package-manager-cache: false
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: Install
-        run: pnpm install --frozen-lockfile
+      - name: Setup Node and Install Dependencies
+        uses: ./.github/actions/setup-node-and-install-dependencies
 
       - name: Build
         run: pnpm build

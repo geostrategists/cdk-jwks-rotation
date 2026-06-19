@@ -1,4 +1,3 @@
-import path from "node:path";
 import { Duration, RemovalPolicy } from "aws-cdk-lib";
 import * as events from "aws-cdk-lib/aws-events";
 import * as targets from "aws-cdk-lib/aws-events-targets";
@@ -7,6 +6,7 @@ import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import * as secretsmanager from "aws-cdk-lib/aws-secretsmanager";
 import { Construct } from "constructs";
+import path from "node:path";
 
 export interface KeySpec {
   algorithm: string;

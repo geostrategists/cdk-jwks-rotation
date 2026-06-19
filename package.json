@@ -2,16 +2,20 @@
   "name": "@geostrategists/cdk-jwks-rotation",
   "version": "0.0.1",
   "description": "CDK construct for generating and rotating JWT signing keys and JSON Web Key Sets (JWKS)",
+  "homepage": "https://github.com/geostrategists/cdk-jwks-rotation#readme",
+  "bugs": {
+    "url": "https://github.com/geostrategists/cdk-jwks-rotation/issues"
+  },
+  "author": "Bernhard Frauendienst <bernhard.frauendienst@geostrategists.de>",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/geostrategists/cdk-jwks-rotation.git"
   },
-  "bugs": {
-    "url": "https://github.com/geostrategists/cdk-jwks-rotation/issues"
-  },
-  "homepage": "https://github.com/geostrategists/cdk-jwks-rotation#readme",
-  "author": "Bernhard Frauendienst <bernhard.frauendienst@geostrategists.de>",
+  "files": [
+    "dist"
+  ],
   "type": "module",
+  "sideEffects": false,
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.mts",
@@ -25,69 +29,8 @@
       "require": "./dist/index.cjs"
     }
   },
-  "files": [
-    "dist"
-  ],
-  "sideEffects": false,
-  "scripts": {
-    "lint": "biome lint .",
-    "format": "biome format --write .",
-    "format:check": "biome check .",
-    "typecheck": "tsc --noEmit",
-    "build": "tsdown",
-    "test": "vitest",
-    "test:run": "vitest run",
-    "test:ui": "vitest --ui",
-    "prepack": "pnpm build && pnpm npmignore --auto",
-    "prepare": "lefthook install",
-    "release": "semantic-release"
-  },
-  "peerDependencies": {
-    "aws-cdk-lib": "^2.0.0",
-    "constructs": "^10.0.0"
-  },
-  "devDependencies": {
-    "@aws-sdk/client-s3": "^3.985.0",
-    "@aws-sdk/client-secrets-manager": "^3.985.0",
-    "@biomejs/biome": "^2.3.14",
-    "@semantic-release/exec": "^7.1.0",
-    "@types/aws-lambda": "^8.10.160",
-    "@types/node": "^24.10.12",
-    "@vitest/ui": "^4.0.18",
-    "aws-cdk-lib": "^2.238.0",
-    "aws-sdk-client-mock": "^4.1.0",
-    "constructs": "^10.4.5",
-    "jose": "^6.1.3",
-    "lefthook": "^2.1.0",
-    "nanoid": "^5.1.6",
-    "npmignore": "^0.3.5",
-    "semantic-release": "^25.0.3",
-    "tsdown": "^0.20.3",
-    "typescript": "^5.9.3",
-    "vitest": "^4.0.18"
-  },
-  "packageManager": "pnpm@10.29.2+sha512.bef43fa759d91fd2da4b319a5a0d13ef7a45bb985a3d7342058470f9d2051a3ba8674e629672654686ef9443ad13a82da2beb9eeb3e0221c87b8154fff9d74b8",
-  "engines": {
-    "node": ">=24"
-  },
-  "release": {
-    "plugins": [
-      "@semantic-release/commit-analyzer",
-      "@semantic-release/release-notes-generator",
-      [
-        "@semantic-release/exec",
-        {
-          "verifyConditionsCmd": "echo //npm.pkg.github.com/:_authToken=${process.env.GITHUB_TOKEN} > /tmp/github.npmrc && npm whoami --userconfig /tmp/github.npmrc --registry https://npm.pkg.github.com/",
-          "publishCmd": "npm publish --userconfig /tmp/github.npmrc --tag ${nextRelease.channel || 'latest'} --registry https://npm.pkg.github.com/ --no-git-tag-version",
-          "successCmd": "rm /tmp/github.npmrc",
-          "failCmd": "rm /tmp/github.npmrc"
-        }
-      ],
-      "@semantic-release/npm",
-      "@semantic-release/github"
-    ]
-  },
   "publishConfig": {
+    "access": "public",
     "ignore": [
       "!dist/**",
       "src/",
@@ -95,7 +38,46 @@
       "tsconfig.json",
       "tsdown.config.ts"
     ],
-    "access": "public",
     "provenance": true
-  }
+  },
+  "scripts": {
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "format": "oxfmt . '!**/*.yml' '!**/*.yaml'",
+    "format:check": "oxfmt --check . '!**/*.yml' '!**/*.yaml'",
+    "typecheck": "tsc --noEmit",
+    "build": "tsdown",
+    "test": "vitest run",
+    "test:run": "vitest run",
+    "test:ui": "vitest --ui",
+    "prepack": "pnpm build && pnpm npmignore --auto",
+    "prepare": "lefthook install"
+  },
+  "devDependencies": {
+    "@aws-sdk/client-s3": "^3.985.0",
+    "@aws-sdk/client-secrets-manager": "^3.985.0",
+    "@types/aws-lambda": "^8.10.160",
+    "@types/node": "^24.10.12",
+    "@vitest/ui": "^4.0.18",
+    "aws-cdk-lib": "^2.238.0",
+    "aws-sdk-client-mock": "^4.1.0",
+    "constructs": "^10.4.5",
+    "jose": "^6.1.3",
+    "lefthook": "^2.1.9",
+    "nanoid": "^5.1.6",
+    "npmignore": "^0.3.5",
+    "oxfmt": "^0.55.0",
+    "oxlint": "^1.70.0",
+    "tsdown": "^0.22.3",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
+  },
+  "peerDependencies": {
+    "aws-cdk-lib": "^2.0.0",
+    "constructs": "^10.0.0"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "packageManager": "pnpm@11.8.0+sha512.c1f5e7c4cb241c8f174b743851d82f42b802324afc8b0f116b96adb15aa06664948dde36960a3ba1079ba5b4b29dd0140135b94b5b5f5263592249d68e555f26"
 }

@@ -3,6 +3,7 @@ import { SecretsManagerClient } from "@aws-sdk/client-secrets-manager";
 import type { SecretsManagerRotationEvent } from "aws-lambda";
 import { mockClient } from "aws-sdk-client-mock";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+
 import type { CleanupEvent } from "../../src/lambda/rotation-handler";
 import { handler } from "../../src/lambda/rotation-handler";
 
