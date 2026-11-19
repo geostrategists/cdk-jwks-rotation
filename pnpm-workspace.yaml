@@ -4,3 +4,6 @@ allowBuilds:
 
 minimumReleaseAge: 1440
 trustPolicy: no-downgrade
+minimumReleaseAgeExclude:
+  # Renovate security update: vitest@4.1.11
+  - vitest@4.1.11
